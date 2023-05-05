@@ -61,7 +61,7 @@ Using your distro's package manager, install the QEMU package. If you are unsure
 ## Setting Up the Virtual Machine
 To ensure you've correctly installed QEMU, open your command line/terminal and run:
 ```sh
-qemu-system-x86_64 -- version
+qemu-system-x86_64 --version
 ```
 
 You should be able to verify that QEMU is installed correctly if the terminal shows something like:
