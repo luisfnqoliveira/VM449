@@ -29,7 +29,8 @@ Virtual machines run inside some other program, which runs on the host computer 
 	```sh
 	git clone https://github.com/shinwookim/VM449
 	```
-2. Download the '**server install image**' for Ubuntu 22.04.2 LTS (Jammy Jellyfish) at https://mirror.cs.pitt.edu/ubuntu/releases/22.04/ and store it inside the cloned repository (created in step 1). **The file name should be exactly `ubuntu-22.04.2-live-server-amd64.iso`**.
+2. Download the '**server install image**' for Ubuntu 22.04.2 LTS (Jammy Jellyfish) at https://mirror.cs.pitt.edu/ubuntu/releases/22.04/ and store it inside the cloned repository (created in step 1). **The file name should be exactly `ubuntu-22.04.2-live-server-amd64.iso`**. 
+    - If for some reason (time has no mercy :) the file name changed, you'll need to adjust all the steps below!
 3. Install QEMU by following the steps for your specific operating system.
 
 ### For Windows
@@ -69,12 +70,21 @@ You should be able to verify that QEMU is installed correctly if the terminal sh
 QEMU emulator version 7.2.94 (v8.0.0-rc4-12015-g9de3238476-dirty)
 Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers
 ```
-Once you've verified QEMU is installed, we can now setup the VM. For your convenience, we've provided several scripts to ease the installation process.
-1. Examine and run the `setup.sh` (or `setup-win.bat`) from the terminal.
-   - The first command `qemu-img create -f qcow2 VM449.qcow2 40G` creates a new virtual hard drive with a maximum capacity of 40GiB.
-   - The second command `qemu-system-x86_64.exe -m 2G -usb -hda VM449.qcow2 -cdrom ubuntu-22.04.2-live-server-amd64.iso` will boot QEMU using the virtual hard disk created above with the Ubuntu image loaded into the virtual CDROM.
-2. Running the script above should open QEMU. Follow the steps within the VM to install Ubuntu onto your virtual hard drive.
+Once you've verified QEMU is installed, we can now setup the VM.
+
+1. Creating a virtual disk:
+   - The command `qemu-img create -f qcow2 VM449.qcow2 40G` creates a new virtual hard drive with a maximum capacity of 40GiB. 
+       - Its size is actually semi-dynamic, as it will only grow when needed. But it will not shrink :(
+2. Booting a Virtual Machine:
+	- The command `qemu-system-x86_64 -m 2G -usb -hda VM449.qcow2 -cdrom ubuntu-22.04.2-live-server-amd64.iso` will boot QEMU using the virtual hard disk created above with the Ubuntu image loaded into the virtual CDROM.
+2. Running the commands above should open QEMU. Follow the steps within the VM to install Ubuntu onto your virtual hard drive.
+    - [More detailed instructions can be found here.](INSTALL.md)
 3. Once installation has finished, you can power down your VM by running `sudo poweroff`.
-4. Now, you can open QEMU by running the `run.sh` (or `run-win.bat`) script.
+4. Now, you can open QEMU by running the second command without the cdrom option.
+	- The command `qemu-system-x86_64 -m 2G -usb -hda VM449.qcow2` will boot QEMU using the virtual hard disk created above.
 5. Verify that the OS has been installed correctly and back up the `VM449.qcow2` to a secure location. If you experience any issues using the VM, you can restore back to this point by swapping this file with the back up.
-> **NOTE**. The setup scripts will create a new virtual hard drive with the same name every time it is run. Hence, if you run `setup.sh` after you've installed the OS, it will essentially *format* the disk and you will need to install the OS again.
+
+> **NOTE**. The setup scripts will create a new virtual hard drive with the same name every time it is run. Hence, if you run setup.sh after you've installed the OS, it will essentially format the disk and you will need to install the OS again.
+
+For your convenience, we've provided several scripts to ease the installation process.
+The scripts will create a new virtual hard drive, download the ISO, and run it for you. We encourage exploring those scripts as a learning experience. But MAKE SURE you run the commands manually so you gain insight on how it all works. The scripts help you get going, but obfuscates the details.
